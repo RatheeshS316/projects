@@ -1,0 +1,1571 @@
+import React, { useState } from 'react';
+import { 
+  Home, 
+  CreditCard, 
+  Plus, 
+  PieChart, 
+  User, 
+  Bell, 
+  ChevronDown, 
+  ArrowUpRight, 
+  ArrowDownLeft, 
+  ShoppingBag, 
+  Coffee, 
+  Smartphone, 
+  MoreHorizontal, 
+  Wifi, 
+  Battery, 
+  Signal, 
+  TrendingUp, 
+  Activity, 
+  Calendar, 
+  Filter, 
+  Search, 
+  ChevronRight, 
+  Camera, 
+  Wallet, 
+  Tag, 
+  AlertCircle, 
+  Settings, 
+  Moon, 
+  LogOut, 
+  Globe, 
+  Repeat, 
+  Layers, 
+  Briefcase, 
+  Plane, 
+  Heart, 
+  FileText, 
+  Sun, 
+  Zap, 
+  Shield, 
+  BarChart2, 
+  Disc, 
+  Clock, 
+  ArrowLeft, 
+  Check, 
+  Landmark, 
+  Music, 
+  Tv, 
+  Car, 
+  Home as HomeIcon, 
+  Droplet
+} from 'lucide-react';
+
+// --- Theme Constants ---
+const THEME = {
+  colors: {
+    primaryGradient: "from-teal-400 to-blue-600",
+    bg: "bg-blue-50", // Updated to blue-50
+    darkBg: "bg-slate-950",
+    textMain: "text-slate-800",
+    textDark: "text-white",
+    textSub: "text-slate-400",
+    income: "text-emerald-500",
+    expense: "text-rose-500",
+    cardBg: "bg-white",
+    cardDark: "bg-slate-900",
+  }
+};
+
+// --- Mock Data ---
+const DATA = {
+  // ... (previous data remains)
+  currencies: [
+    { code: 'USD', symbol: '$', name: 'US Dollar' },
+    { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
+    { code: 'EUR', symbol: '€', name: 'Euro' },
+    { code: 'GBP', symbol: '£', name: 'British Pound' },
+    { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
+    { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
+    { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
+    { code: 'CNY', symbol: '¥', name: 'Chinese Yuan' },
+  ],
+  // Detailed Data for Each Category Screen
+  categoryDetails: {
+    shopping: {
+      id: 'shopping',
+      name: 'Shopping',
+      spent: 750.80,
+      limit: 1000,
+      percentage: 75,
+      gradient: "from-emerald-400 to-teal-500",
+      icon: ShoppingBag,
+      transactions: [
+        { id: 1, title: "Amazon", subtitle: "Oct 25", amount: -120.00, icon: ShoppingBag, bg: "bg-emerald-100 text-emerald-600" },
+        { id: 2, title: "Nike", subtitle: "Oct 24", amount: -89.99, icon: ShoppingBag, bg: "bg-emerald-100 text-emerald-600" },
+        { id: 3, title: "Zara", subtitle: "Oct 15", amount: -45.50, icon: ShoppingBag, bg: "bg-emerald-100 text-emerald-600" },
+      ],
+      chartData: [40, 60, 35, 80, 55, 70, 45]
+    },
+    subscription: {
+      id: 'subscription',
+      name: 'Subscription',
+      spent: 159.99,
+      limit: 200,
+      percentage: 80,
+      gradient: "from-blue-400 to-indigo-500",
+      icon: Activity,
+      transactions: [
+        { id: 1, title: "Spotify", subtitle: "Monthly", amount: -9.99, icon: Music, bg: "bg-blue-100 text-blue-600" },
+        { id: 2, title: "Netflix", subtitle: "Monthly", amount: -18.99, icon: Tv, bg: "bg-blue-100 text-blue-600" },
+        { id: 3, title: "Google Drive", subtitle: "Yearly", amount: -2.99, icon:  Briefcase, bg: "bg-blue-100 text-blue-600" },
+      ],
+      chartData: [20, 20, 20, 35, 20, 25, 20]
+    },
+    food: {
+      id: 'food',
+      name: 'Food',
+      spent: 520.25,
+      limit: 600,
+      percentage: 86,
+      gradient: "from-rose-400 to-pink-500",
+      icon: Coffee,
+      transactions: [
+        { id: 1, title: "Starbucks", subtitle: "Oct 25", amount: -15.75, icon: Coffee, bg: "bg-rose-100 text-rose-600" },
+        { id: 2, title: "McDonald's", subtitle: "Oct 23", amount: -8.99, icon: Coffee, bg: "bg-rose-100 text-rose-600" },
+        { id: 3, title: "Dominos", subtitle: "Oct 20", amount: -21.30, icon: Coffee, bg: "bg-rose-100 text-rose-600" },
+      ],
+      chartData: [50, 45, 60, 30, 80, 55, 70]
+    },
+    entertainment: {
+      id: 'entertainment',
+      name: 'Entertainment',
+      spent: 235.50,
+      limit: 300,
+      percentage: 78,
+      gradient: "from-amber-300 to-orange-400",
+      icon: FileText,
+      transactions: [
+        { id: 1, title: "Movie Tickets", subtitle: "Oct 18", amount: -45.00, icon: FileText, bg: "bg-amber-100 text-amber-600" },
+        { id: 2, title: "PlayStation", subtitle: "Oct 10", amount: -25.50, icon: Tv, bg: "bg-amber-100 text-amber-600" },
+      ],
+      chartData: [30, 20, 45, 10, 60, 30, 40]
+    },
+    bills: {
+      id: 'bills',
+      name: 'Bills',
+      spent: 820.50,
+      limit: 900,
+      percentage: 91,
+      gradient: "from-orange-300 to-rose-400",
+      icon: Wallet,
+      transactions: [
+        { id: 1, title: "Electricity Bill", subtitle: "Oct 01", amount: -120.00, icon: Zap, bg: "bg-orange-100 text-orange-600" },
+        { id: 2, title: "Internet Bill", subtitle: "Oct 02", amount: -59.99, icon: Wifi, bg: "bg-orange-100 text-orange-600" },
+        { id: 3, title: "Water Bill", subtitle: "Oct 05", amount: -45.00, icon: Droplet, bg: "bg-orange-100 text-orange-600" },
+      ],
+      chartData: [100, 10, 10, 10, 10, 10, 80]
+    },
+    transport: {
+      id: 'transport',
+      name: 'Transport',
+      spent: 250.30,
+      limit: 300,
+      percentage: 83,
+      gradient: "from-cyan-400 to-blue-500",
+      icon: Tag,
+      transactions: [
+        { id: 1, title: "Uber", subtitle: "Oct 24", amount: -15.00, icon: Car, bg: "bg-cyan-100 text-cyan-600" },
+        { id: 2, title: "Gas Station", subtitle: "Oct 20", amount: -83.99, icon:  Briefcase, bg: "bg-cyan-100 text-cyan-600" },
+        { id: 3, title: "Train Ticket", subtitle: "Oct 15", amount: -25.00, icon: Tag, bg: "bg-cyan-100 text-cyan-600" },
+      ],
+      chartData: [30, 40, 20, 50, 30, 60, 20]
+    },
+    healthcare: {
+      id: 'healthcare',
+      name: 'Healthcare',
+      spent: 550.00,
+      limit: 1000,
+      percentage: 55,
+      gradient: "from-fuchsia-300 to-purple-500",
+      icon: Heart,
+      transactions: [
+        { id: 1, title: "Pharmacy", subtitle: "Oct 12", amount: -45.00, icon: Heart, bg: "bg-purple-100 text-purple-600" },
+        { id: 2, title: "Doctor Visit", subtitle: "Oct 05", amount: -150.00, icon: Heart, bg: "bg-purple-100 text-purple-600" },
+      ],
+      chartData: [10, 50, 10, 10, 20, 10, 10]
+    },
+    salary: {
+      id: 'salary',
+      name: 'Salary',
+      spent: 5200.00,
+      limit: 5200,
+      percentage: 100,
+      gradient: "from-green-400 to-emerald-600",
+      icon: DollarSignIcon,
+      transactions: [
+        { id: 1, title: "Tech Corp", subtitle: "Oct 30", amount: 5200.00, icon: DollarSignIcon, bg: "bg-green-100 text-green-600" },
+      ],
+      chartData: [0, 0, 0, 0, 0, 0, 100] // Spike on payday
+    },
+    transfer: {
+      id: 'transfer',
+      name: 'Transfer',
+      spent: 2500.00,
+      limit: 3000,
+      percentage: 83,
+      gradient: "from-sky-400 to-blue-600",
+      icon: TrendingUp,
+      transactions: [
+        { id: 1, title: "To Savings", subtitle: "Oct 01", amount: -1500.00, icon: TrendingUp, bg: "bg-sky-100 text-sky-600" },
+        { id: 2, title: "To Parents", subtitle: "Oct 10", amount: -1000.00, icon: User, bg: "bg-sky-100 text-sky-600" },
+      ],
+      chartData: [50, 10, 30, 10, 10, 10, 10]
+    }
+  },
+  // Previous arrays kept for other screens
+  transactions: [
+    { id: 1, title: "Shopping", subtitle: "Amazon", amount: 50.00, date: "Today", type: "income", icon: ShoppingBag, bg: "bg-emerald-400", shadow: "shadow-emerald-200" },
+    { id: 2, title: "Subscription", subtitle: "Spotify", amount: 19.99, date: "Today", type: "expense", icon: Activity, bg: "bg-blue-500", shadow: "shadow-blue-200" },
+    { id: 3, title: "Food", subtitle: "Starbucks", amount: 12.50, date: "Yesterday", type: "expense", icon: Coffee, bg: "bg-rose-400", shadow: "shadow-rose-200" },
+    { id: 4, title: "Transfer", subtitle: "To Savings", amount: 1500.00, date: "Monday", type: "income", icon: TrendingUp, bg: "bg-indigo-500", shadow: "shadow-indigo-200" },
+    { id: 5, title: "Netflix", subtitle: "Monthly", amount: 18.99, date: "Sunday", type: "expense", icon: Smartphone, bg: "bg-red-500", shadow: "shadow-red-200" },
+    { id: 6, title: "Grocery", subtitle: "Walmart", amount: 142.80, date: "May 15", type: "expense", icon: ShoppingBag, bg: "bg-orange-400", shadow: "shadow-orange-200" },
+  ],
+  weeklyExpenses: [
+    { day: "Mo", value: 30 },
+    { day: "Tu", value: 45 },
+    { day: "We", value: 25 },
+    { day: "Th", value: 60 },
+    { day: "Fr", value: 50 },
+    { day: "Sa", value: 80 },
+    { day: "Su", value: 40 },
+  ],
+  categories: [
+    { id: 'shopping', name: "Shopping", icon: ShoppingBag, color: "bg-emerald-100 text-emerald-600" },
+    { id: 'subscription', name: "Subscription", icon: Activity, color: "bg-blue-100 text-blue-600" },
+    { id: 'food', name: "Food", icon: Coffee, color: "bg-rose-100 text-rose-600" },
+    { id: 'entertainment', name: "Entertainment", icon: Tv, color: "bg-amber-100 text-amber-600" },
+    { id: 'bills', name: "Bills", icon: Wallet, color: "bg-orange-100 text-orange-600" },
+    { id: 'transport', name: "Transport", icon: Tag, color: "bg-cyan-100 text-cyan-600" },
+    { id: 'healthcare', name: "Healthcare", icon: Heart, color: "bg-purple-100 text-purple-600" },
+    { id: 'salary', name: "Salary", icon: DollarSignIcon, color: "bg-green-100 text-green-600" },
+    { id: 'transfer', name: "Transfer", icon: TrendingUp, color: "bg-sky-100 text-sky-600" },
+    { id: 'travel', name: "Travel", icon: Plane, color: "bg-violet-100 text-violet-600" },
+  ],
+  initialBudgets: [
+    { id: 1, category: "Shopping", limit: 500, spent: 320, color: "bg-teal-100 text-teal-600", barColor: "bg-teal-400" },
+    { id: 2, category: "Food & Drinks", limit: 400, spent: 450, color: "bg-rose-100 text-rose-600", barColor: "bg-rose-500" },
+    { id: 3, category: "Transportation", limit: 200, spent: 120, color: "bg-blue-100 text-blue-600", barColor: "bg-blue-500" },
+  ],
+  accounts: [
+    { id: 1, name: "Cash", balance: 1230.50, type: "cash", gradient: "from-emerald-400 to-teal-500", icon: Wallet, textColor: "text-white" },
+    { id: 2, name: "Bank", balance: 8750.00, type: "bank", gradient: "from-blue-400 to-indigo-500", icon: Briefcase, textColor: "text-white" },
+    { id: 3, name: "Credit Card", balance: -1820.00, type: "card", gradient: "from-white to-slate-50", icon: CreditCard, textColor: "text-slate-800", border: "border-slate-100" },
+  ],
+  recurring: [
+    { id: 1, name: "Netflix", frequency: "Monthly", amount: 14.99, active: true, icon: Smartphone, color: "bg-red-100 text-red-600" },
+    { id: 2, name: "Gym Membership", frequency: "Weekly", amount: 45.00, active: true, icon: Activity, color: "bg-violet-100 text-violet-600" },
+    { id: 3, name: "Spotify", frequency: "Monthly", amount: 9.99, active: false, icon: Activity, color: "bg-green-100 text-green-600" },
+    { id: 4, name: "Rent", frequency: "Monthly", amount: 1200.00, active: false, icon: HomeIcon, color: "bg-orange-100 text-orange-600" },
+    { id: 5, name: "Auto Payment", frequency: "Daily", amount: 5.00, active: false, icon: Calendar, color: "bg-blue-100 text-blue-600" },
+  ],
+  investments: {
+    total: 65230.00,
+    monthlyContribution: 1200,
+    growth: 2.5,
+    chartData: [20, 35, 30, 45, 40, 55, 65],
+    sip: { amount: 300, duration: "5 Years", progress: 60 },
+    mutualFunds: [
+      { id: 1, name: "Bluechip Equity Fund", type: "Equity", risk: "Low Risk", return: 12, riskColor: "bg-emerald-100 text-emerald-600" },
+      { id: 2, name: "Debt Opportunities", type: "Debt", risk: "Medium Risk", return: 8.5, riskColor: "bg-amber-100 text-amber-600" },
+      { id: 3, name: "Hybrid Growth Fund", type: "Hybrid", risk: "High Risk", return: 15.3, riskColor: "bg-rose-100 text-rose-600" },
+    ],
+    bonds: [
+      { id: 1, name: "Corporate Bond", return: 5.7, maturity: "Aug 2028", icon: Shield }
+    ],
+    others: [
+      { id: 1, name: "Gold", icon: Disc, color: "bg-amber-100 text-amber-600" },
+      { id: 2, name: "ETFs", icon: BarChart2, color: "bg-blue-100 text-blue-600" },
+      { id: 3, name: "Fixed Deposit", icon: LandMarkIcon, color: "bg-teal-100 text-teal-600" },
+    ]
+  },
+  alerts: [
+    { id: 1, title: "Budget Warning", desc: "You've exceeded your dining budget", time: "2 hrs ago", type: "warning", active: true, icon: AlertCircle, color: "bg-amber-100 text-amber-600" },
+    { id: 2, title: "Bill Reminder", desc: "Electricity bill due tomorrow", time: "1 day ago", type: "info", active: true, icon: Zap, color: "bg-blue-100 text-blue-600" },
+    { id: 3, title: "Weekly Summary", desc: "Your weekly spending summary is ready", time: "2 days ago", type: "success", active: false, icon: PieChart, color: "bg-emerald-100 text-emerald-600" },
+  ]
+};
+
+// Helper Icons
+function DollarSignIcon(props) {
+  return (
+    <svg 
+      {...props} 
+      xmlns="http://www.w3.org/2000/svg" 
+      width="24" 
+      height="24" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <line x1="12" x2="12" y1="2" y2="22" />
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+    </svg>
+  );
+}
+
+function LandMarkIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <line x1="3" x2="21" y1="22" y2="22" />
+      <line x1="6" x2="6" y1="18" y2="11" />
+      <line x1="10" x2="10" y1="18" y2="11" />
+      <line x1="14" x2="14" y1="18" y2="11" />
+      <line x1="18" x2="18" y1="18" y2="11" />
+      <polygon points="12 2 20 7 4 7" />
+    </svg>
+  );
+}
+
+// --- Reusable Components ---
+
+const Card = ({ children, className = "", onClick, isDarkMode }) => (
+  <div 
+    onClick={onClick}
+    className={`
+      ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+      rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border 
+      ${className} 
+      ${onClick ? 'cursor-pointer active:scale-[0.98] transition-transform' : ''}
+      transition-colors duration-300
+    `}
+  >
+    {children}
+  </div>
+);
+
+const PrimaryButton = ({ children, onClick, className = "" }) => (
+  <button 
+    onClick={onClick}
+    className={`w-full py-4 rounded-full bg-gradient-to-r from-teal-400 to-blue-600 text-white font-bold text-lg shadow-lg shadow-blue-500/30 active:scale-95 transition-transform hover:shadow-xl ${className}`}
+  >
+    {children}
+  </button>
+);
+
+const ToggleSwitch = ({ isOn, onToggle }) => (
+  <button 
+    onClick={onToggle}
+    className={`w-12 h-7 rounded-full p-1 transition-colors duration-300 ease-in-out ${isOn ? 'bg-teal-400' : 'bg-blue-200'}`}
+  >
+    <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out ${isOn ? 'translate-x-5' : 'translate-x-0'}`}></div>
+  </button>
+);
+
+const ToggleTabs = ({ tabs, activeTab, onTabChange, isDarkMode }) => (
+  <div className={`flex p-1 rounded-full mb-6 ${isDarkMode ? 'bg-slate-800' : 'bg-blue-100/50'}`}>
+    {tabs.map((tab) => (
+      <button
+        key={tab}
+        onClick={() => onTabChange(tab)}
+        className={`flex-1 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+          activeTab === tab 
+            ? `${isDarkMode ? 'bg-slate-700 text-teal-400' : 'bg-white text-teal-600'} shadow-sm` 
+            : 'text-slate-400 hover:text-slate-500'
+        }`}
+      >
+        {tab}
+      </button>
+    ))}
+  </div>
+);
+
+// --- Custom Visual Components ---
+
+const DonutChart = ({ isDarkMode }) => {
+  return (
+    <div className="relative w-36 h-36 flex items-center justify-center transform hover:scale-105 transition-transform duration-500">
+      <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#4ADE80" strokeWidth="20" strokeDasharray="100 251" strokeDashoffset="0" className="drop-shadow-sm" />
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#FB923C" strokeWidth="20" strokeDasharray="63 251" strokeDashoffset="-100" className="drop-shadow-sm" />
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#60A5FA" strokeWidth="20" strokeDasharray="50 251" strokeDashoffset="-163" className="drop-shadow-sm" />
+        <circle cx="50" cy="50" r="40" fill="none" stroke={isDarkMode ? "#334155" : "#E2E8F0"} strokeWidth="20" strokeDasharray="38 251" strokeDashoffset="-213" />
+      </svg>
+      <div className={`absolute w-20 h-20 rounded-full shadow-inner flex items-center justify-center ${isDarkMode ? 'bg-slate-800' : 'bg-blue-50'}`}>
+         <div className="text-[10px] font-bold text-slate-400">EXP</div>
+      </div>
+    </div>
+  );
+};
+
+const BarChart = ({ data, isDarkMode, currency }) => (
+  <div className="flex items-end justify-between h-36 gap-2 mt-2 px-2">
+    {data.map((item, index) => (
+      <div key={index} className="flex flex-col items-center gap-2 group w-full">
+        <div className={`relative w-full flex items-end justify-center h-28 rounded-lg overflow-hidden ${isDarkMode ? 'bg-slate-800' : 'bg-blue-100/50'}`}>
+          <div 
+            style={{ height: `${item.value}%` }} 
+            className={`w-2.5 rounded-t-full transition-all duration-500 ${
+              index === 5 
+                ? 'bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.5)]' 
+                : `${isDarkMode ? 'bg-slate-700' : 'bg-blue-200'} group-hover:bg-blue-300`
+            }`}
+          ></div>
+        </div>
+        <span className="text-[10px] text-slate-400 font-medium">{item.day}</span>
+      </div>
+    ))}
+  </div>
+);
+
+const LineChart = ({ data, color, isDarkMode }) => {
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const points = data.map((val, i) => {
+    const x = (i / (data.length - 1)) * 100;
+    const y = 100 - ((val - min) / (max - min)) * 80 - 10;
+    return `${x},${y}`;
+  }).join(' ');
+
+  return (
+    <div className="w-full h-24 mt-4 relative">
+       <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+         <defs>
+            <linearGradient id="lineGradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+              <stop offset="100%" stopColor={color} stopOpacity="0" />
+            </linearGradient>
+         </defs>
+         <path d={`M0,100 ${points} 100,100`} fill="url(#lineGradient)" className="opacity-50" />
+         <polyline points={points} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+       </svg>
+       <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+         <span>Jan</span>
+         <span>Feb</span>
+         <span>Mar</span>
+         <span>Apr</span>
+         <span>May</span>
+         <span>Jun</span>
+       </div>
+    </div>
+  );
+};
+
+// Generic Transaction Item (Modified for new screens)
+const TransactionItem = ({ item, isDarkMode, currency }) => (
+  <div className={`flex items-center justify-between p-4 border border-transparent rounded-3xl transition-all shadow-[0_2px_10px_rgba(0,0,0,0.02)] cursor-pointer group mb-3
+    ${isDarkMode ? 'bg-slate-900 hover:bg-slate-800 hover:border-slate-700' : 'bg-white hover:bg-blue-50 hover:border-blue-100'}
+  `}>
+    <div className="flex items-center gap-4">
+      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md ${item.bg} ${item.shadow}`}>
+        <item.icon size={20} />
+      </div>
+      <div>
+        <h4 className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{item.title}</h4>
+        <p className="text-slate-400 text-xs font-medium mt-0.5">{item.subtitle}</p>
+      </div>
+    </div>
+    <div className="text-right">
+      <span className={`block font-bold text-sm ${item.amount > 0 ? 'text-emerald-500' : (isDarkMode ? 'text-slate-200' : 'text-slate-800')}`}>
+        {item.amount > 0 ? '+' : ''}{currency.symbol}{Math.abs(item.amount).toFixed(2)}
+      </span>
+      {/* Assuming 'date' isn't always present in the new object structure, fallback */}
+      <span className="text-slate-400 text-xs">{item.date || "Today"}</span>
+    </div>
+  </div>
+);
+
+const BudgetCard = ({ budget, isDarkMode, currency }) => {
+  const percentage = Math.min(Math.round((budget.spent / budget.limit) * 100), 100);
+  const isOverLimit = budget.spent > budget.limit;
+
+  return (
+    <div className={`
+      p-5 rounded-3xl shadow-sm border mb-4 transition-all hover:shadow-md
+      ${isDarkMode ? 'bg-slate-900' : 'bg-white'}
+      ${isOverLimit 
+        ? (isDarkMode ? 'border-rose-900 bg-rose-900/10' : 'border-rose-200 bg-rose-50/10') 
+        : (isDarkMode ? 'border-slate-800' : 'border-blue-100')}
+    `}>
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${budget.color}`}>
+            <Tag size={18} />
+          </div>
+          <div>
+            <h4 className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{budget.category}</h4>
+            <p className="text-xs text-slate-400 mt-0.5">Limit: {currency.symbol}{budget.limit}</p>
+          </div>
+        </div>
+        <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{currency.symbol}{budget.spent}</h3>
+      </div>
+      
+      <div className={`relative w-full h-2.5 rounded-full overflow-hidden ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>
+        <div 
+          style={{ width: `${percentage}%` }}
+          className={`h-full rounded-full transition-all duration-1000 ${isOverLimit ? 'bg-rose-500' : budget.barColor}`}
+        ></div>
+      </div>
+      
+      <div className="flex justify-between items-center mt-2">
+        <span className={`text-xs font-bold ${isOverLimit ? 'text-rose-500' : 'text-slate-400'}`}>
+          {Math.round((budget.spent / budget.limit) * 100)}% Used
+        </span>
+        {isOverLimit && (
+          <div className="flex items-center gap-1 text-rose-500">
+            <AlertCircle size={12} />
+            <span className="text-xs font-bold">Over Limit</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const BottomNavigation = ({ activeTab, setActiveTab, isDarkMode }) => {
+  const tabs = [
+    { id: 'dashboard', icon: Home, label: 'Dashboard' },
+    { id: 'transactions', icon: CreditCard, label: 'Transact' },
+    { id: 'add', icon: Plus, label: 'Add', isFloating: true },
+    { id: 'budgets', icon: PieChart, label: 'Budgets' },
+    { id: 'profile', icon: User, label: 'Profile' },
+  ];
+
+  return (
+    <div className={`
+      absolute bottom-0 left-0 right-0 backdrop-blur-md border-t px-6 pb-8 pt-2 h-[90px] rounded-t-[35px] shadow-[0_-10px_40px_rgba(0,0,0,0.03)] z-50 flex justify-between items-center
+      ${isDarkMode ? 'bg-slate-900/90 border-slate-800' : 'bg-white/90 border-blue-100'}
+    `}>
+      {tabs.map((tab) => {
+        if (tab.isFloating) {
+          return (
+            <div key={tab.id} className="-mt-14 relative group">
+              <div className="absolute inset-2 bg-teal-400 rounded-full blur-lg opacity-40 group-hover:opacity-60 transition-opacity"></div>
+              <button 
+                onClick={() => setActiveTab('add')}
+                className={`w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-blue-600 text-white flex items-center justify-center shadow-lg transform active:scale-95 transition-all hover:-translate-y-1 relative z-10 border-4 ${isDarkMode ? 'border-slate-900' : 'border-white'}`}
+              >
+                <Plus size={32} strokeWidth={2.5} />
+              </button>
+            </div>
+          );
+        }
+        
+        const isActive = activeTab === tab.id;
+        return (
+          <button 
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex flex-col items-center gap-1.5 w-14 transition-all duration-300 ${isActive ? 'text-blue-500' : 'text-slate-400 hover:text-slate-500'}`}
+          >
+            <tab.icon 
+              size={26} 
+              strokeWidth={isActive ? 2.5 : 2}
+              fill={isActive ? "currentColor" : "none"} 
+              fillOpacity={isActive ? 0.1 : 0}
+              className={`transition-transform duration-300 ${isActive ? '-translate-y-1' : ''}`}
+            />
+            <span className={`text-[10px] font-bold transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 h-0'}`}>
+              {tab.label}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+// --- New Screens ---
+
+// NEW: Generic Category Detail Screen
+const CategoryDetailScreen = ({ isDarkMode, currency, categoryId, onBack }) => {
+  const data = DATA.categoryDetails[categoryId] || DATA.categoryDetails['shopping']; // Fallback
+
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      {/* Header */}
+      <div className={`px-6 pt-14 pb-6 sticky top-0 z-20 flex justify-between items-center ${isDarkMode ? 'bg-slate-950' : 'bg-transparent backdrop-blur-sm'}`}>
+        <button onClick={onBack} className={`p-2 rounded-full border ${isDarkMode ? 'border-slate-800 text-white hover:bg-slate-900' : 'border-blue-200 text-slate-800 hover:bg-white'}`}>
+          <ArrowLeft size={20} />
+        </button>
+        <h2 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{data.name}</h2>
+        <button className={`p-2 rounded-full border ${isDarkMode ? 'border-slate-800 text-white hover:bg-slate-900' : 'border-blue-200 text-slate-800 hover:bg-white'}`}>
+          <MoreHorizontal size={20} />
+        </button>
+      </div>
+
+      <div className="px-6 space-y-6">
+        {/* Summary Card */}
+        <div className={`relative w-full rounded-[2.5rem] bg-gradient-to-br ${data.gradient} p-8 shadow-xl shadow-blue-500/30 text-white overflow-hidden`}>
+           <div className="relative z-10">
+             <div className="flex justify-between items-start mb-1">
+                <div className="flex flex-col">
+                    <p className="text-white/80 text-sm font-medium mb-1 flex items-center gap-2">
+                        <Activity size={14} /> Spent
+                    </p>
+                    <h1 className="text-4xl font-extrabold mb-4">{currency.symbol}{data.spent.toFixed(2)}</h1>
+                </div>
+                <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                    <data.icon size={24} className="text-white" />
+                </div>
+             </div>
+             
+             <div className="w-full bg-black/10 h-1.5 rounded-full overflow-hidden mb-2">
+                <div style={{ width: `${data.percentage}%` }} className="h-full bg-white rounded-full"></div>
+             </div>
+             <div className="flex justify-between text-xs font-medium text-white/90">
+               <span>{data.percentage}% this month</span>
+               <span>Limit: {currency.symbol}{data.limit}</span>
+             </div>
+           </div>
+           
+           {/* Decorative Background */}
+           <div className="absolute top-0 right-0 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+           <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4"></div>
+        </div>
+
+        {/* Transactions Section */}
+        <div>
+            <div className="flex justify-between items-center mb-3">
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full border ${isDarkMode ? 'border-slate-800 bg-slate-900' : 'border-blue-200 bg-white'}`}>
+                    <Check size={12} className="text-teal-500" />
+                    <span className={`text-xs font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Transactions</span>
+                </div>
+                <span className="text-xs text-slate-400">{data.transactions.length} items</span>
+            </div>
+            
+            <div className={`rounded-[2rem] p-2 ${isDarkMode ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-blue-100'}`}>
+                {data.transactions.map((t) => (
+                    <TransactionItem key={t.id} item={t} isDarkMode={isDarkMode} currency={currency} />
+                ))}
+            </div>
+        </div>
+
+        {/* Monthly Spending Chart */}
+        <div>
+            <div className="flex justify-between items-center mb-3">
+                <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Monthly Spending</h3>
+                <button className="text-slate-400 hover:text-teal-500"><MoreHorizontal size={16} /></button>
+            </div>
+            <Card isDarkMode={isDarkMode} className="p-5">
+                <div className="flex items-end justify-between h-32 gap-2 mt-2">
+                    {data.chartData.map((val, index) => (
+                    <div key={index} className="flex flex-col items-center gap-2 w-full group">
+                        <div className={`relative w-full flex items-end justify-center h-24 rounded-lg overflow-hidden ${isDarkMode ? 'bg-slate-800' : 'bg-blue-50'}`}>
+                        <div 
+                            style={{ height: `${val}%` }} 
+                            className={`w-2.5 rounded-t-full transition-all duration-500 bg-gradient-to-t ${data.gradient} opacity-80 group-hover:opacity-100`}
+                        ></div>
+                        </div>
+                    </div>
+                    ))}
+                </div>
+                <div className="flex justify-between text-[10px] text-slate-400 mt-2 px-1">
+                    <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+                </div>
+            </Card>
+        </div>
+
+        {/* Floating Action Button */}
+        <div className="fixed bottom-28 right-6">
+            <button className={`w-14 h-14 rounded-full bg-gradient-to-br ${data.gradient} text-white flex items-center justify-center shadow-xl shadow-blue-500/30 hover:scale-110 transition-transform`}>
+            <Plus size={28} />
+            </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const InvestmentInsightsScreen = ({ isDarkMode, currency }) => {
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className={`px-6 pt-14 pb-6 sticky top-0 z-20 flex justify-between items-center ${isDarkMode ? 'bg-slate-950' : 'bg-transparent backdrop-blur-sm'}`}>
+        <div className="flex items-center gap-2">
+           <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Investment Overview</h2>
+           <MoreHorizontal className="text-slate-400" size={20} />
+        </div>
+      </div>
+
+      <div className="px-6 space-y-6">
+        {/* Total Investments Gradient Card */}
+        <div className="relative w-full rounded-[2.5rem] bg-gradient-to-br from-teal-400 to-blue-500 p-8 shadow-xl shadow-blue-500/30 text-white overflow-hidden">
+           <div className="relative z-10">
+             <p className="text-blue-100 text-sm font-medium mb-1">Total Investments</p>
+             <h1 className="text-4xl font-extrabold mb-2">{currency.symbol}{DATA.investments.total.toLocaleString()}</h1>
+             <div className="flex items-center gap-1 text-sm font-medium text-teal-100">
+               <TrendingUp size={16} />
+               <span>{currency.symbol}{DATA.investments.monthlyContribution} this month</span>
+             </div>
+           </div>
+           {/* Decorative Background */}
+           <div className="absolute top-0 right-0 w-48 h-48 bg-white opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+           <div className="absolute bottom-0 left-0 w-32 h-32 bg-teal-200 opacity-20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4"></div>
+        </div>
+
+        {/* Growth Chart */}
+        <Card isDarkMode={isDarkMode} className="p-6">
+           <h3 className={`font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Growth Overview</h3>
+           <LineChart data={DATA.investments.chartData} color="#3B82F6" isDarkMode={isDarkMode} />
+        </Card>
+
+        {/* SIP Section */}
+        <Card isDarkMode={isDarkMode} className="p-6">
+           <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600">
+                <TrendingUp size={24} />
+              </div>
+              <div>
+                <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Systematic Investment Plan</h4>
+                <div className="flex items-center gap-4 text-xs text-slate-400 mt-0.5">
+                  <span>{currency.symbol}{DATA.investments.sip.amount} / month</span>
+                  <span>{DATA.investments.sip.duration}</span>
+                </div>
+              </div>
+           </div>
+           <div className={`w-full h-2 rounded-full overflow-hidden ${isDarkMode ? 'bg-slate-800' : 'bg-blue-50'}`}>
+              <div style={{ width: `${DATA.investments.sip.progress}%` }} className="h-full bg-blue-500 rounded-full"></div>
+           </div>
+        </Card>
+
+        {/* Mutual Funds */}
+        <div>
+           <h3 className={`font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Mutual Funds</h3>
+           <div className="space-y-3">
+             {DATA.investments.mutualFunds.map((fund) => (
+               <Card key={fund.id} isDarkMode={isDarkMode} className="p-5">
+                 <div className="flex justify-between items-start mb-2">
+                    <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{fund.name}</h4>
+                    <span className={`px-2 py-1 rounded-lg text-[10px] font-bold ${fund.riskColor}`}>{fund.risk}</span>
+                 </div>
+                 <div className="flex justify-between items-end">
+                    <span className="text-xs text-slate-400">{fund.type}</span>
+                    <span className="text-emerald-500 font-bold text-sm">+{fund.return}% / yr</span>
+                 </div>
+               </Card>
+             ))}
+           </div>
+        </div>
+
+        {/* Other Investments Grid */}
+        <div>
+          <h3 className={`font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Other Investments</h3>
+          <div className="grid grid-cols-2 gap-4">
+             {DATA.investments.others.map((item) => (
+               <Card key={item.id} isDarkMode={isDarkMode} className="p-4 flex items-center gap-3 hover:shadow-md transition-shadow">
+                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${item.color}`}>
+                    <item.icon size={18} />
+                 </div>
+                 <span className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>{item.name}</span>
+               </Card>
+             ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const NotificationsScreen = ({ isDarkMode }) => {
+  const [alerts, setAlerts] = useState(DATA.alerts);
+
+  const toggleAlert = (id) => {
+    setAlerts(prev => prev.map(alert => 
+      alert.id === id ? { ...alert, active: !alert.active } : alert
+    ));
+  };
+
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className={`px-6 pt-14 pb-6 sticky top-0 z-20 flex justify-between items-center ${isDarkMode ? 'bg-slate-950' : 'bg-transparent backdrop-blur-sm'}`}>
+        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Notifications & Alerts</h2>
+        <MoreHorizontal className="text-slate-400" size={24} />
+      </div>
+
+      <div className="px-6 space-y-4">
+        {alerts.map((alert) => (
+          <Card key={alert.id} isDarkMode={isDarkMode} className="p-5 flex items-start gap-4">
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${alert.color}`}>
+               <alert.icon size={24} />
+            </div>
+            <div className="flex-1">
+               <div className="flex justify-between items-start mb-1">
+                  <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{alert.title}</h4>
+                  <ToggleSwitch isOn={alert.active} onToggle={() => toggleAlert(alert.id)} />
+               </div>
+               <p className="text-sm text-slate-400 mb-2 leading-relaxed">{alert.desc}</p>
+               <span className="text-xs font-medium text-slate-300">{alert.time}</span>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const CreateBudgetScreen = ({ isDarkMode, onSave, currency }) => {
+  const [category, setCategory] = useState('');
+  const [limit, setLimit] = useState('');
+
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className={`px-6 pt-14 pb-4 sticky top-0 z-20 flex items-center gap-2 ${isDarkMode ? 'bg-slate-950' : 'bg-transparent backdrop-blur-sm'}`}>
+        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Create Budget</h2>
+      </div>
+
+      <div className="px-6 pt-4 space-y-6">
+        <div className={`
+          rounded-3xl p-8 shadow-sm border mb-6 text-center
+          ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+        `}>
+          <p className="text-slate-400 text-sm font-bold mb-2">BUDGET LIMIT</p>
+          <div className="flex items-center justify-center gap-1">
+            <span className="text-4xl font-bold text-slate-400">{currency.symbol}</span>
+            <input 
+              type="number"
+              value={limit}
+              onChange={(e) => setLimit(e.target.value)}
+              placeholder="0"
+              className={`text-5xl font-extrabold text-center w-full bg-transparent focus:outline-none placeholder-slate-400/30 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}
+            />
+          </div>
+        </div>
+
+        <div className={`
+          rounded-2xl p-4 flex items-center justify-between shadow-sm border cursor-pointer active:bg-opacity-80
+          ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+        `}>
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-blue-100 text-slate-500'}`}>
+              <Tag size={20} />
+            </div>
+            <input 
+              type="text" 
+              placeholder="Category Name" 
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className={`font-bold bg-transparent focus:outline-none w-full ${isDarkMode ? 'text-white placeholder-slate-500' : 'text-slate-700 placeholder-slate-400'}`}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className={`absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t to-transparent z-10 ${isDarkMode ? 'from-slate-950 via-slate-950' : 'from-blue-50 via-blue-50'}`}>
+        <PrimaryButton onClick={() => onSave(category, limit)}>Create Budget</PrimaryButton>
+      </div>
+    </div>
+  );
+};
+
+const CurrencyScreen = ({ isDarkMode, currentCurrency, onSelect }) => {
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className={`px-6 pt-14 pb-6 sticky top-0 z-20 flex items-center gap-2 ${isDarkMode ? 'bg-slate-950' : 'bg-transparent backdrop-blur-sm'}`}>
+        <Globe className={isDarkMode ? 'text-white' : 'text-slate-800'} size={24} />
+        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Select Currency</h2>
+      </div>
+
+      <div className="px-6 space-y-3">
+        {DATA.currencies.map((curr) => (
+          <Card 
+            key={curr.code} 
+            isDarkMode={isDarkMode} 
+            onClick={() => onSelect(curr)}
+            className={`p-4 flex items-center justify-between group ${currentCurrency.code === curr.code ? (isDarkMode ? 'border-teal-500 bg-slate-800' : 'border-teal-400 bg-teal-50') : ''}`}
+          >
+            <div className="flex items-center gap-4">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold ${currentCurrency.code === curr.code ? 'bg-teal-500 text-white' : (isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-blue-100 text-slate-500')}`}>
+                {curr.symbol}
+              </div>
+              <div>
+                <span className={`font-bold block ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{curr.name}</span>
+                <span className="text-xs text-slate-400">{curr.code}</span>
+              </div>
+            </div>
+            {currentCurrency.code === curr.code && <Check size={20} className="text-teal-500" />}
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const AccountsScreen = ({ isDarkMode, currency }) => {
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className={`px-6 pt-14 pb-6 sticky top-0 z-20 flex items-center gap-2 ${isDarkMode ? 'bg-slate-950' : 'bg-transparent backdrop-blur-sm'}`}>
+        <Briefcase className={isDarkMode ? 'text-white' : 'text-slate-800'} size={24} />
+        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Accounts</h2>
+      </div>
+
+      <div className="px-6 space-y-4">
+        {DATA.accounts.map((account) => (
+          <div 
+            key={account.id} 
+            className={`relative p-6 rounded-[2rem] shadow-lg overflow-hidden bg-gradient-to-br ${account.gradient} ${account.border ? 'border ' + account.border : ''}`}
+          >
+            <div className="absolute -right-10 -top-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
+            
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center bg-white/20 backdrop-blur-md shadow-sm ${account.textColor}`}>
+                  <account.icon size={24} />
+                </div>
+                <div>
+                  <h4 className={`font-bold text-lg ${account.textColor}`}>{account.name}</h4>
+                  <p className={`text-xs opacity-70 ${account.textColor}`}>{account.type}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <h3 className={`font-bold text-xl ${account.textColor}`}>
+                  {account.balance < 0 ? '-' : ''}{currency.symbol}{Math.abs(account.balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                </h3>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        <button className={`w-full py-4 mt-2 rounded-[2rem] font-bold flex items-center justify-center gap-2 shadow-sm border hover:shadow-md transition-all
+          ${isDarkMode ? 'bg-slate-900 border-slate-800 text-teal-400' : 'bg-gradient-to-r from-teal-50 to-blue-50 border-teal-100 text-teal-600'}
+        `}>
+          <Plus size={20} />
+          Add Account
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const ProfileScreen = ({ onNavigate, isDarkMode, setIsDarkMode, currency }) => {
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className="px-6 pt-14 pb-6">
+        <div className={`
+          p-6 rounded-[2.5rem] shadow-sm border flex flex-col items-center text-center relative overflow-hidden
+          ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-gradient-to-br from-white to-blue-50 border-white'}
+        `}>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100/50 rounded-full blur-3xl -mr-10 -mt-10"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-teal-100/50 rounded-full blur-3xl -ml-10 -mb-10"></div>
+          
+          <div className={`w-24 h-24 rounded-full p-1 shadow-md mb-4 relative z-10 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" alt="Profile" className="w-full h-full rounded-full bg-slate-100" />
+          </div>
+          <h2 className={`text-xl font-bold relative z-10 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Alex Johnson</h2>
+          <p className="text-sm text-slate-400 relative z-10">alex.johnson@email.com</p>
+        </div>
+      </div>
+
+      <div className="px-6 space-y-4 mb-8">
+        <h3 className="text-sm font-bold text-slate-400 px-2 uppercase tracking-wider">Manage</h3>
+        
+        <Card isDarkMode={isDarkMode} onClick={() => onNavigate('accounts')} className="p-4 flex items-center justify-between group">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+              <Wallet size={20} />
+            </div>
+            <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Accounts</span>
+          </div>
+          <ChevronRight size={20} className="text-slate-300 group-hover:text-blue-500 transition-colors" />
+        </Card>
+
+        <Card isDarkMode={isDarkMode} onClick={() => onNavigate('categories')} className="p-4 flex items-center justify-between group">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+              <Layers size={20} />
+            </div>
+            <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Categories</span>
+          </div>
+          <ChevronRight size={20} className="text-slate-300 group-hover:text-emerald-500 transition-colors" />
+        </Card>
+
+        <Card isDarkMode={isDarkMode} onClick={() => onNavigate('recurring')} className="p-4 flex items-center justify-between group">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600">
+              <Repeat size={20} />
+            </div>
+            <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Recurring Transactions</span>
+          </div>
+          <ChevronRight size={20} className="text-slate-300 group-hover:text-violet-500 transition-colors" />
+        </Card>
+
+        <Card isDarkMode={isDarkMode} onClick={() => onNavigate('investments')} className="p-4 flex items-center justify-between group">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-600">
+              <TrendingUp size={20} />
+            </div>
+            <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Investment Insights</span>
+          </div>
+          <ChevronRight size={20} className="text-slate-300 group-hover:text-cyan-500 transition-colors" />
+        </Card>
+
+        <Card isDarkMode={isDarkMode} onClick={() => onNavigate('notifications')} className="p-4 flex items-center justify-between group">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+              <Bell size={20} />
+            </div>
+            <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Notifications & Alerts</span>
+          </div>
+          <ChevronRight size={20} className="text-slate-300 group-hover:text-amber-500 transition-colors" />
+        </Card>
+      </div>
+
+      <div className="px-6 space-y-4">
+        <h3 className="text-sm font-bold text-slate-400 px-2 uppercase tracking-wider">Settings</h3>
+        
+        <div className="space-y-3">
+          <div className={`
+            p-4 rounded-[1.5rem] shadow-sm border flex items-center justify-between
+            ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+          `}>
+            <div className="flex items-center gap-3">
+              {isDarkMode ? <Sun size={20} className="text-slate-400" /> : <Moon size={20} className="text-slate-400" />}
+              <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+            </div>
+            <ToggleSwitch isOn={isDarkMode} onToggle={() => setIsDarkMode(!isDarkMode)} />
+          </div>
+
+          <div 
+            onClick={() => onNavigate('currency')}
+            className={`
+            p-4 rounded-[1.5rem] shadow-sm border flex items-center justify-between cursor-pointer
+            ${isDarkMode ? 'bg-slate-900 border-slate-800 active:bg-slate-800' : 'bg-white border-blue-100 active:bg-blue-50'}
+          `}>
+            <div className="flex items-center gap-3">
+              <Globe size={20} className="text-slate-400" />
+              <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Currency</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-slate-400">{currency.name} ({currency.symbol})</span>
+              <ChevronRight size={18} className="text-slate-300" />
+            </div>
+          </div>
+        </div>
+
+        <button className={`w-full py-4 mt-6 rounded-[1.5rem] font-bold flex items-center justify-center gap-2 transition-colors
+          ${isDarkMode ? 'bg-rose-900/20 text-rose-400 hover:bg-rose-900/30' : 'bg-rose-50 text-rose-500 hover:bg-rose-100'}
+        `}>
+          <LogOut size={20} />
+          Logout
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const DashboardScreen = ({ isDarkMode, currency, onNavigate }) => {
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <header className="px-6 pt-14 pb-6 flex justify-between items-center bg-transparent sticky top-0 z-20">
+        <div className="flex items-center gap-3">
+          <button className={`flex items-center gap-1.5 font-bold text-lg backdrop-blur-sm px-3 py-1.5 rounded-full border
+            ${isDarkMode ? 'bg-slate-800/50 border-slate-700 text-white' : 'bg-white/50 border-white/50 text-slate-800'}
+          `}>
+             <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center">
+               <User size={14} className="text-teal-600" />
+             </div>
+             <span>Alex Johnson</span>
+             <ChevronDown size={14} className="text-slate-400" />
+          </button>
+        </div>
+        <div className="flex gap-2">
+            <button 
+              onClick={() => onNavigate('notifications')}
+              className={`p-2.5 backdrop-blur-md rounded-full shadow-sm border text-slate-500
+              ${isDarkMode ? 'bg-slate-800/80 border-slate-700' : 'bg-white/80 border-blue-100'}
+            `}>
+              <Bell size={20} />
+            </button>
+            <div className={`w-10 h-10 rounded-full overflow-hidden border-2 shadow-sm ${isDarkMode ? 'border-slate-800' : 'border-white'}`}>
+               <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" alt="Profile" className="w-full h-full bg-slate-100" />
+            </div>
+        </div>
+      </header>
+
+      <div className="px-6 space-y-6">
+        <div className="relative w-full h-52 rounded-[2.5rem] bg-gradient-to-br from-[#2DD4BF] via-[#3B82F6] to-[#2563EB] p-8 shadow-xl shadow-blue-500/30 overflow-hidden text-white flex flex-col justify-between">
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-4">
+               <div className="p-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/10">
+                 <User size={18} />
+               </div>
+               <div>
+                 <p className="text-xs font-medium text-teal-50 opacity-80">Welcome back,</p>
+                 <p className="text-sm font-bold">Alex Johnson</p>
+               </div>
+            </div>
+            
+            <h1 className="text-4xl font-extrabold tracking-tight mb-2">{currency.symbol}24,562.00</h1>
+            
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+              <TrendingUp size={14} className="text-teal-300" />
+              <span className="text-xs font-semibold text-white">+2.5% this month</span>
+            </div>
+          </div>
+          
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-teal-300 opacity-10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4"></div>
+        </div>
+
+        <div className="flex gap-4">
+          <Card isDarkMode={isDarkMode} className="flex-1 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-full bg-emerald-400 flex items-center justify-center text-white shadow-lg shadow-emerald-100">
+              <ArrowDownLeft size={24} />
+            </div>
+            <div>
+              <p className="text-slate-400 text-xs font-medium mb-1">Income</p>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{currency.symbol}4,250</h3>
+            </div>
+          </Card>
+          <Card isDarkMode={isDarkMode} className="flex-1 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-full bg-rose-400 flex items-center justify-center text-white shadow-lg shadow-rose-100">
+              <ArrowUpRight size={24} />
+            </div>
+            <div>
+              <p className="text-slate-400 text-xs font-medium mb-1">Expense</p>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{currency.symbol}1,840</h3>
+            </div>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Card isDarkMode={isDarkMode} className="p-5 flex flex-col items-center col-span-1">
+            <div className="w-full mb-2">
+              <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Category-wise</h3>
+              <p className="text-[10px] text-slate-400">Spending</p>
+            </div>
+            
+            <DonutChart isDarkMode={isDarkMode} />
+            
+            <div className="w-full space-y-2 mt-2">
+              {DATA.categories.slice(0, 4).map((cat) => (
+                <div key={cat.id} className="flex items-center justify-between text-[10px]">
+                  <div className="flex items-center gap-1.5">
+                    <div className={`w-2.5 h-2.5 rounded-full ${cat.color.split(' ')[0]}`}></div>
+                    <span className="text-slate-500 font-medium">{cat.name}</span>
+                  </div>
+                  <span className={`font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>25%</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card isDarkMode={isDarkMode} className="p-5 col-span-1 flex flex-col justify-between">
+            <div>
+              <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Weekly Expenses</h3>
+              <div className="flex flex-col gap-1 mt-1">
+                 <div className="text-[10px] font-bold text-slate-400">{currency.symbol}300</div>
+                 <div className="text-[10px] font-bold text-slate-400">{currency.symbol}200</div>
+                 <div className="text-[10px] font-bold text-slate-400">{currency.symbol}100</div>
+              </div>
+            </div>
+            <BarChart isDarkMode={isDarkMode} data={DATA.weeklyExpenses} currency={currency} />
+            
+            <div className={`space-y-1.5 mt-2 pt-2 border-t ${isDarkMode ? 'border-slate-800' : 'border-blue-100'}`}>
+              <div className="flex justify-between text-[10px]">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-blue-200"></div>
+                  <span className="text-slate-500">Monday</span>
+                </div>
+                <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>-{currency.symbol}100</span>
+              </div>
+              <div className="flex justify-between text-[10px]">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span className="text-slate-500">Tuesday</span>
+                </div>
+                <span className="font-bold text-rose-500">-{currency.symbol}19.99</span>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div>
+          <div className="flex justify-between items-center mb-4 px-1">
+            <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Recent Transactions</h3>
+            <button className="text-slate-400 hover:text-slate-600">
+              <MoreHorizontal size={24} />
+            </button>
+          </div>
+          
+          <div className="space-y-1">
+            {DATA.transactions.slice(0, 4).map((item) => (
+              <TransactionItem isDarkMode={isDarkMode} key={item.id} item={item} currency={currency} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const BudgetsScreen = ({ isDarkMode, budgets, onNavigate, currency }) => {
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className={`px-6 pt-14 pb-6 sticky top-0 z-20 ${isDarkMode ? 'bg-slate-950' : 'bg-transparent backdrop-blur-sm'}`}>
+        <h2 className={`text-2xl font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Budgets</h2>
+        <p className="text-slate-400 text-sm">May 2024</p>
+      </div>
+
+      <div className="px-6 space-y-2">
+        {budgets.map((budget) => (
+          <BudgetCard isDarkMode={isDarkMode} key={budget.id} budget={budget} currency={currency} />
+        ))}
+        
+        <button 
+          onClick={() => onNavigate('createBudget')}
+          className={`
+          w-full py-4 mt-6 border-2 border-dashed rounded-2xl font-bold flex items-center justify-center gap-2 transition-all
+          ${isDarkMode ? 'border-slate-800 text-slate-500 hover:bg-slate-900 hover:text-teal-400 hover:border-teal-500/50' : 'border-slate-200 text-slate-400 hover:bg-white hover:border-teal-200 hover:text-teal-500'}
+        `}>
+          <Plus size={20} />
+          Create New Budget
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const TransactionsScreen = ({ isDarkMode, currency }) => {
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className={`px-6 pt-14 pb-6 sticky top-0 z-20 shadow-sm border-b ${isDarkMode ? 'bg-slate-950 border-slate-800' : 'bg-white/80 backdrop-blur-md border-blue-100'}`}>
+        <h2 className={`text-2xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Transactions</h2>
+        <div className="flex items-center justify-between">
+          <div className={`flex items-center gap-2 border rounded-full px-4 py-2 cursor-pointer shadow-sm active:scale-95 transition-transform
+            ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-200'}
+          `}>
+            <Calendar size={16} className="text-teal-500" />
+            <span className={`text-sm font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>May 2024</span>
+            <ChevronDown size={16} className="text-slate-400" />
+          </div>
+          <button className={`p-2.5 border rounded-full shadow-sm active:scale-95 transition-transform
+            ${isDarkMode ? 'bg-slate-900 border-slate-800 text-slate-400' : 'bg-white border-blue-200 text-slate-600'}
+          `}>
+            <Filter size={18} />
+          </button>
+        </div>
+      </div>
+
+      <div className="px-6 py-4">
+        <div className="space-y-1">
+          {DATA.transactions.map((item) => (
+            <TransactionItem isDarkMode={isDarkMode} key={item.id} item={item} currency={currency} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AddTransactionScreen = ({ onSave, isDarkMode, currency }) => {
+  const [amount, setAmount] = useState('');
+  const [type, setType] = useState('Expense');
+  
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className="px-6 pt-14 pb-4">
+        <h2 className={`text-2xl font-bold mb-6 text-center ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Add Transaction</h2>
+        
+        <div className={`
+          rounded-3xl p-8 shadow-sm border mb-6 text-center
+          ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+        `}>
+          <p className="text-slate-400 text-sm font-bold mb-2">ENTER AMOUNT</p>
+          <div className="flex items-center justify-center gap-1">
+            <span className="text-4xl font-bold text-slate-400">{currency.symbol}</span>
+            <input 
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.00"
+              className={`text-5xl font-extrabold text-center w-full bg-transparent focus:outline-none placeholder-slate-400/30 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}
+            />
+          </div>
+        </div>
+
+        <ToggleTabs 
+          tabs={['Income', 'Expense', 'Transfer']} 
+          activeTab={type} 
+          onTabChange={setType}
+          isDarkMode={isDarkMode}
+        />
+
+        <div className="space-y-4">
+          <div className={`
+            rounded-2xl p-4 flex items-center justify-between shadow-sm border cursor-pointer active:bg-opacity-80
+            ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+          `}>
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-blue-100 text-slate-500'}`}>
+                <Tag size={20} />
+              </div>
+              <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Category</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-slate-400 text-sm">Select</span>
+              <ChevronRight size={18} className="text-slate-300" />
+            </div>
+          </div>
+
+          <div className={`
+            rounded-2xl p-4 flex items-center justify-between shadow-sm border cursor-pointer active:bg-opacity-80
+            ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+          `}>
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-blue-100 text-slate-500'}`}>
+                <Wallet size={20} />
+              </div>
+              <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Account</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Main Wallet</span>
+              <ChevronRight size={18} className="text-slate-300" />
+            </div>
+          </div>
+
+          <div className={`
+            rounded-2xl p-4 flex items-center justify-between shadow-sm border cursor-pointer active:bg-opacity-80
+            ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+          `}>
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-blue-100 text-slate-500'}`}>
+                <Calendar size={20} />
+              </div>
+              <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-700'}`}>Date</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Today, May 24</span>
+              <ChevronRight size={18} className="text-slate-300" />
+            </div>
+          </div>
+
+          <textarea 
+            placeholder="Add notes..." 
+            className={`
+              w-full h-24 rounded-2xl p-4 shadow-sm border focus:outline-none focus:ring-2 focus:ring-teal-500/50 resize-none text-sm
+              ${isDarkMode ? 'bg-slate-900 border-slate-800 text-white placeholder-slate-500' : 'bg-white border-blue-100 text-slate-800 placeholder-slate-400'}
+            `}
+          ></textarea>
+
+          <div className={`
+            border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors gap-2
+            ${isDarkMode ? 'border-slate-800 hover:bg-slate-900' : 'border-slate-200 hover:bg-blue-50'}
+          `}>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-blue-100 text-slate-400'}`}>
+              <Camera size={20} />
+            </div>
+            <span className="text-sm font-bold text-slate-400">Add Attachment</span>
+          </div>
+        </div>
+
+        <div className="h-24"></div>
+      </div>
+      
+      <div className={`absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t to-transparent z-10 ${isDarkMode ? 'from-slate-950 via-slate-950' : 'from-blue-50 via-blue-50'}`}>
+        <PrimaryButton onClick={onSave}>Save Transaction</PrimaryButton>
+      </div>
+    </div>
+  );
+};
+
+const CategoryManagementScreen = ({ isDarkMode, onNavigate }) => {
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className={`px-6 pt-14 pb-6 sticky top-0 z-20 flex justify-between items-center ${isDarkMode ? 'bg-slate-950' : 'bg-transparent backdrop-blur-sm'}`}>
+        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Categories</h2>
+      </div>
+
+      <div className="px-6 grid grid-cols-2 gap-4">
+        {DATA.categories.map((category) => (
+          <div 
+            key={category.id} 
+            onClick={() => onNavigate('categoryDetail', category.id)}
+            className={`
+            p-4 rounded-[2rem] shadow-sm border flex flex-col items-center justify-center gap-3 hover:shadow-md transition-all cursor-pointer aspect-square
+            ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+          `}>
+            <div className={`w-14 h-14 rounded-full flex items-center justify-center ${category.color}`}>
+              <category.icon size={24} />
+            </div>
+            <span className={`font-bold text-sm ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>{category.name}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="fixed bottom-28 right-6">
+        <button className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-400 to-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/30 hover:scale-110 transition-transform">
+          <Plus size={28} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const RecurringTransactionsScreen = ({ isDarkMode }) => {
+  const [recurring, setRecurring] = useState(DATA.recurring);
+
+  const toggleRecurring = (id) => {
+    setRecurring(prev => prev.map(item => 
+      item.id === id ? { ...item, active: !item.active } : item
+    ));
+  };
+
+  return (
+    <div className={`flex-1 overflow-y-auto pb-32 scrollbar-hide ${isDarkMode ? 'bg-slate-950' : 'bg-blue-50'}`}>
+      <div className={`px-6 pt-14 pb-6 sticky top-0 z-20 flex justify-between items-center ${isDarkMode ? 'bg-slate-950' : 'bg-transparent backdrop-blur-sm'}`}>
+        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Recurring</h2>
+      </div>
+
+      <div className="px-6 space-y-4">
+        {recurring.length > 0 ? (
+          recurring.map((item) => (
+            <div key={item.id} className={`
+              p-4 rounded-[2rem] shadow-sm border flex items-center justify-between
+              ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-blue-100'}
+            `}>
+              <div className="flex items-center gap-4">
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${item.color}`}>
+                  <item.icon size={24} />
+                </div>
+                <div>
+                  <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{item.name}</h4>
+                  <p className="text-xs text-slate-400 font-medium">{item.frequency}</p>
+                </div>
+              </div>
+              <ToggleSwitch isOn={item.active} onToggle={() => toggleRecurring(item.id)} />
+            </div>
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center py-10 opacity-50">
+            <Repeat size={48} className="text-slate-300 mb-4" />
+            <p className="text-slate-500 font-medium">No Recurring Transactions</p>
+            <p className="text-xs text-slate-400 text-center mt-1">You haven't set up any recurring transactions yet.</p>
+          </div>
+        )}
+
+        <div className="fixed bottom-28 right-6">
+          <button className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-400 to-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/30 hover:scale-110 transition-transform">
+            <Plus size={28} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- Main App Container ---
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [currentView, setCurrentView] = useState('dashboard');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [currency, setCurrency] = useState(DATA.currencies[0]);
+  const [budgets, setBudgets] = useState(DATA.initialBudgets);
+  const [selectedCategory, setSelectedCategory] = useState('shopping'); // Default
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setCurrentView(tab);
+  };
+
+  const handleNavigate = (view, param) => {
+    if (view === 'categoryDetail' && param) {
+      setSelectedCategory(param);
+    }
+    setCurrentView(view);
+  };
+
+  const handleCreateBudget = (category, limit) => {
+    const newBudget = {
+      id: budgets.length + 1,
+      category: category || "New Budget",
+      limit: parseInt(limit) || 0,
+      spent: 0,
+      color: "bg-blue-100 text-blue-600",
+      barColor: "bg-blue-500"
+    };
+    setBudgets([...budgets, newBudget]);
+    handleNavigate('budgets');
+  };
+
+  const handleCurrencySelect = (curr) => {
+    setCurrency(curr);
+    handleNavigate('profile');
+  }
+
+  const renderScreen = () => {
+    const commonProps = { isDarkMode, currency };
+    switch(currentView) {
+      case 'dashboard': return <DashboardScreen {...commonProps} onNavigate={handleNavigate} />;
+      case 'transactions': return <TransactionsScreen {...commonProps} />;
+      case 'add': return <AddTransactionScreen {...commonProps} onSave={() => handleTabChange('dashboard')} />;
+      case 'budgets': return <BudgetsScreen {...commonProps} budgets={budgets} onNavigate={handleNavigate} />;
+      case 'createBudget': return <CreateBudgetScreen {...commonProps} onSave={handleCreateBudget} />;
+      case 'profile': return <ProfileScreen {...commonProps} onNavigate={handleNavigate} setIsDarkMode={setIsDarkMode} />;
+      case 'accounts': return <AccountsScreen {...commonProps} />;
+      case 'categories': return <CategoryManagementScreen {...commonProps} onNavigate={handleNavigate} />;
+      case 'categoryDetail': return <CategoryDetailScreen {...commonProps} categoryId={selectedCategory} onBack={() => handleNavigate('categories')} />;
+      case 'recurring': return <RecurringTransactionsScreen {...commonProps} />;
+      case 'investments': return <InvestmentInsightsScreen {...commonProps} />;
+      case 'notifications': return <NotificationsScreen {...commonProps} />;
+      case 'currency': return <CurrencyScreen {...commonProps} currentCurrency={currency} onSelect={handleCurrencySelect} />;
+      default: return <DashboardScreen {...commonProps} />;
+    }
+  };
+
+  const getActiveTab = () => {
+    if (['accounts', 'categories', 'recurring', 'investments', 'notifications', 'currency', 'categoryDetail'].includes(currentView)) {
+      return 'profile';
+    }
+    if (['createBudget'].includes(currentView)) {
+      return 'budgets';
+    }
+    return activeTab;
+  };
+
+  return (
+    <div className={`min-h-screen flex items-center justify-center font-sans antialiased p-4 sm:p-8 transition-colors duration-500 ${isDarkMode ? 'bg-slate-950' : 'bg-gradient-to-br from-blue-100 via-blue-50 to-white'}`}>
+      {/* Mobile Frame Simulation */}
+      <div className={`w-full max-w-[390px] h-[844px] sm:rounded-[50px] shadow-[0_30px_60px_-10px_rgba(0,0,0,0.5)] overflow-hidden relative border-[12px] ring-1 flex flex-col transition-colors duration-300
+        ${isDarkMode ? 'bg-slate-950 border-slate-900 ring-slate-800' : 'bg-blue-50 border-slate-900 ring-slate-800'}
+      `}>
+        
+        {/* iOS Status Bar Simulation */}
+        <div className={`px-7 pt-4 pb-2 flex justify-between items-center backdrop-blur-sm z-30 text-[14px] font-bold absolute w-full top-0 ${isDarkMode ? 'text-white bg-slate-950/50' : 'text-slate-900 bg-transparent'}`}>
+           <span className="ml-2">9:41</span>
+           <div className="flex items-center gap-1.5 mr-2">
+             <Signal size={16} className="fill-current" />
+             <Wifi size={16} />
+             <Battery size={20} className="fill-current" />
+           </div>
+        </div>
+
+        {/* Screen Content */}
+        {renderScreen()}
+
+        {/* Navigation */}
+        {currentView !== 'add' && <BottomNavigation activeTab={getActiveTab()} setActiveTab={handleTabChange} isDarkMode={isDarkMode} />}
+
+        {/* Home Indicator */}
+        <div className={`absolute bottom-2 left-1/2 transform -translate-x-1/2 w-36 h-1.5 rounded-full z-50 ${isDarkMode ? 'bg-slate-700' : 'bg-slate-800'}`}></div>
+      </div>
+      
+      {/* Global Styles for Scrollbar Hiding */}
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+      `}</style>
+    </div>
+  );
+}
