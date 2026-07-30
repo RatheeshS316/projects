@@ -1,0 +1,35 @@
+2026-04-03 16:27:18,083 [INFO] 
+--- Real-time Prediction for Earthquake ---
+2026-04-03 16:27:18,364 [INFO] 
+[Stream 1] Fetching real-time data...
+2026-04-03 16:27:18,365 [INFO] Incoming features: {'magnitude': 3.6291166575788343, 'depth': 172.54592507037333, 'time_patterns': 17.848456697813287, 'seismic_anomalies': 0.6311039112291145}
+2026-04-03 16:27:18,403 [INFO] Fetching accelerometer data from mobile phone...
+2026-04-03 16:27:18,404 [INFO] Phone Sensor data -> X: 0.62, Y: -0.63, Z: 10.37
+2026-04-03 16:27:18,405 [INFO] Abnormal Vibration Detected: False
+2026-04-03 16:27:19,911 [INFO] 
+[Stream 2] Fetching real-time data...
+2026-04-03 16:27:19,911 [INFO] Incoming features: {'magnitude': 3.4046138099290446, 'depth': 181.34059016707485, 'time_patterns': 17.060695435670745, 'seismic_anomalies': 0.028096040114917467}
+2026-04-03 16:27:19,932 [INFO] Fetching accelerometer data from mobile phone...
+2026-04-03 16:27:19,933 [INFO] Phone Sensor data -> X: 0.14, Y: 0.87, Z: 10.45
+2026-04-03 16:27:19,933 [INFO] Abnormal Vibration Detected: False
+2026-04-03 16:27:21,438 [INFO] 
+[Stream 3] Fetching real-time data...
+2026-04-03 16:27:21,440 [INFO] Incoming features: {'magnitude': 3.5804242228151546, 'depth': 182.67591190649392, 'time_patterns': 1.5402511099201277, 'seismic_anomalies': 0.5879011992961359}
+2026-04-03 16:27:21,465 [INFO] Fetching accelerometer data from mobile phone...
+2026-04-03 16:27:21,465 [INFO] Phone Sensor data -> X: 0.62, Y: 0.71, Z: 9.11
+2026-04-03 16:27:21,466 [INFO] Abnormal Vibration Detected: False
+2026-04-03 16:34:23,627 [INFO] 
+--- Training Flood Model ---
+2026-04-03 16:34:23,628 [INFO] Generating mock data...
+2026-04-03 16:34:25,539 [INFO] Training Complete.
+
+2026-04-03 16:34:25,540 [INFO] 
+--- Training Earthquake Model ---
+2026-04-03 16:34:25,540 [INFO] Generating mock data...
+2026-04-03 16:34:26,285 [INFO] Training Complete.
+
+2026-04-03 16:34:26,286 [INFO] 
+--- Training Tsunami Model ---
+2026-04-03 16:34:26,287 [INFO] Generating mock data...
+2026-04-03 16:34:26,988 [INFO] Training Complete.
+
